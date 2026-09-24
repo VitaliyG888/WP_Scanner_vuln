@@ -16,6 +16,9 @@ reports/
 wp_scan_report.json
 wp_scan_report.html
 vulnerable_functions_report.json
+dynamic_report.json
+dynamic_report.html
+downloaded_plugins/
 
 # Editor / OS noise
 .vscode/

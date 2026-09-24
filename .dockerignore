@@ -9,8 +9,9 @@ pyvenv.cfg
 __pycache__
 *.pyc
 *.pyo
-legacy
 downloaded_plugins
 *_report.json
 *_report.html
 vulnerable_functions_report.json
+dynamic_report.json
+dynamic_report.html

@@ -12,7 +12,7 @@ Unlike a plain "dangerous function" grep this scanner:
   * maps every finding to a CWE id and a severity.
 
 Usage:
-    python wp_vuln_scanner.py --path env/vulnerable-plugin
+    python wp_vuln_scanner.py --path ./wp-content/plugins
     python wp_vuln_scanner.py --path ./downloaded_plugins --out report
     python wp_vuln_scanner.py --url https://example.com/wp-content/plugins/
 """
@@ -29,8 +29,7 @@ from wp_scan_rules import (  # noqa: E402
 )
 from wp_report import summarize, to_json, render_html  # noqa: E402
 
-DEFAULT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            "env", "vulnerable-plugin")
+DEFAULT_PATH = os.getcwd()
 SENSITIVE_CATEGORIES = {"rce", "sqli", "lfi", "file_upload", "deserialization"}
 
 FUNC_RE = re.compile(
@@ -337,7 +336,7 @@ def download_remote_plugins(url, dest):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Static WordPress vulnerability scanner")
     parser.add_argument("--path", default=DEFAULT_PATH,
-                        help="local file/directory to scan (default: env/vulnerable-plugin)")
+                        help="local file/directory to scan (default: current directory)")
     parser.add_argument("--url", help="remote /wp-content/plugins/ URL to mirror and scan")
     parser.add_argument("--out", default="vulnerable_functions_report",
                         help="output file prefix (writes .json and .html)")

@@ -1,4 +1,4 @@
-# Scanner runtime (static analyser + dynamic framework + test suite).
+# Scanner runtime (static analyser + dynamic framework).
 FROM python:3.11-slim
 
 LABEL org.opencontainers.image.title="WP Vuln Scanner"

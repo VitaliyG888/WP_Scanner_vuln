@@ -3,9 +3,9 @@
 """Unified WordPress vulnerability scanner (static source analysis + dynamic).
 
 Examples:
-    python wp_scanner.py --mode static --path env/vulnerable-plugin
+    python wp_scanner.py --mode static --path ./wp-content/plugins
     python wp_scanner.py --mode dynamic --url http://localhost:8080
-    python wp_scanner.py --mode all --path env/vulnerable-plugin --url http://localhost:8080
+    python wp_scanner.py --mode all --path ./wp-content/plugins --url http://localhost:8080
 """
 
 import argparse

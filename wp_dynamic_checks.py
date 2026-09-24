@@ -15,8 +15,9 @@ from wp_dynamic_common import result, token
 
 AJAX = "/wp-admin/admin-ajax.php"
 
-# (kind, path, method, action, param) - lab endpoints first, generic fallbacks
-# afterwards so the scanner is still useful against a production site.
+# (kind, path, method, action, param) - known vulnerable plugin endpoints first,
+# generic fallbacks afterwards so the scanner is still useful against arbitrary
+# production sites.
 ACTIVE_CANDIDATES = [
     ("rce", AJAX, "GET", "vulnlab_exec", "cmd"),
     ("sqli", AJAX, "GET", "vulnlab_search", "u"),
