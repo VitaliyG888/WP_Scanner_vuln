@@ -1,0 +1,192 @@
+{
+  "target": "C:/MyProject/WP_Vuln_scaner/env/vulnerable-plugin",
+  "files_scanned": 1,
+  "findings": [
+    {
+      "id": "sqli-wpdb-interpolation",
+      "title": "SQL injection (unprepared $wpdb query)",
+      "category": "sqli",
+      "severity": "critical",
+      "cwe": "CWE-89",
+      "file": "vuln-core.php",
+      "line": 33,
+      "snippet": "$rows = $wpdb->get_col( \"SELECT user_login FROM {$wpdb->users} WHERE user_login = '\" . $u . \"'\" );",
+      "message": "Request data is interpolated into SQL without $wpdb->prepare()."
+    },
+    {
+      "id": "rce-command-injection",
+      "title": "Command injection",
+      "category": "rce",
+      "severity": "critical",
+      "cwe": "CWE-78",
+      "file": "vuln-core.php",
+      "line": 46,
+      "snippet": "system( 'id; ' . $cmd );",
+      "message": "Unvalidated request data reaches a command execution function."
+    },
+    {
+      "id": "upload-unrestricted",
+      "title": "Unrestricted file upload",
+      "category": "file_upload",
+      "severity": "critical",
+      "cwe": "CWE-434",
+      "file": "vuln-core.php",
+      "line": 78,
+      "snippet": "if ( move_uploaded_file( $tmp, $dest ) ) {",
+      "message": "Uploaded data is stored on disk without extension/type validation."
+    },
+    {
+      "id": "secret-api-key",
+      "title": "Hardcoded API key / token",
+      "category": "hardcoded_secret",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "file": "vuln-core.php",
+      "line": 20,
+      "snippet": "define( 'VULNLAB_API_KEY', 'sk-live-a1b2c3d4e5f6g7h8i9j0' );",
+      "message": "Secret material is hardcoded in the source tree."
+    },
+    {
+      "id": "secret-db-credentials",
+      "title": "Hardcoded database credentials",
+      "category": "hardcoded_secret",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "file": "vuln-core.php",
+      "line": 21,
+      "snippet": "$vulnlab_db_password = 'R00t-Password-123456';",
+      "message": "Secret material is hardcoded in the source tree."
+    },
+    {
+      "id": "unauth-ajax-action",
+      "title": "Unauthenticated admin-ajax action",
+      "category": "unauth_action",
+      "severity": "high",
+      "cwe": "CWE-862",
+      "file": "vuln-core.php",
+      "line": 29,
+      "snippet": "add_action( 'wp_ajax_nopriv_vulnlab_search', 'vulnlab_search' );",
+      "message": "wp_ajax_nopriv_vulnlab_search -> vulnlab_search() performs a sensitive operation with no nonce/capability check."
+    },
+    {
+      "id": "unauth-ajax-action",
+      "title": "Unauthenticated admin-ajax action",
+      "category": "unauth_action",
+      "severity": "high",
+      "cwe": "CWE-862",
+      "file": "vuln-core.php",
+      "line": 42,
+      "snippet": "add_action( 'wp_ajax_nopriv_vulnlab_exec', 'vulnlab_exec' );",
+      "message": "wp_ajax_nopriv_vulnlab_exec -> vulnlab_exec() performs a sensitive operation with no nonce/capability check."
+    },
+    {
+      "id": "unauth-ajax-action",
+      "title": "Unauthenticated admin-ajax action",
+      "category": "unauth_action",
+      "severity": "high",
+      "cwe": "CWE-862",
+      "file": "vuln-core.php",
+      "line": 53,
+      "snippet": "add_action( 'wp_ajax_nopriv_vulnlab_read', 'vulnlab_read' );",
+      "message": "wp_ajax_nopriv_vulnlab_read -> vulnlab_read() performs a sensitive operation with no nonce/capability check."
+    },
+    {
+      "id": "lfi-arbitrary-file-read",
+      "title": "Local file inclusion / arbitrary file read",
+      "category": "lfi",
+      "severity": "high",
+      "cwe": "CWE-98",
+      "file": "vuln-core.php",
+      "line": 57,
+      "snippet": "readfile( $file );",
+      "message": "Request data is used to build a file path that is read or included."
+    },
+    {
+      "id": "unauth-ajax-action",
+      "title": "Unauthenticated admin-ajax action",
+      "category": "unauth_action",
+      "severity": "high",
+      "cwe": "CWE-862",
+      "file": "vuln-core.php",
+      "line": 66,
+      "snippet": "add_action( 'wp_ajax_nopriv_vulnlab_upload', 'vulnlab_upload' );",
+      "message": "wp_ajax_nopriv_vulnlab_upload -> vulnlab_upload() performs a sensitive operation with no nonce/capability check."
+    },
+    {
+      "id": "unauth-ajax-action",
+      "title": "Unauthenticated admin-ajax action",
+      "category": "unauth_action",
+      "severity": "high",
+      "cwe": "CWE-862",
+      "file": "vuln-core.php",
+      "line": 109,
+      "snippet": "add_action( 'wp_ajax_nopriv_vulnlab_unpack', 'vulnlab_unpack' );",
+      "message": "wp_ajax_nopriv_vulnlab_unpack -> vulnlab_unpack() performs a sensitive operation with no nonce/capability check."
+    },
+    {
+      "id": "deserialization-untrusted",
+      "title": "Insecure deserialization",
+      "category": "deserialization",
+      "severity": "high",
+      "cwe": "CWE-502",
+      "file": "vuln-core.php",
+      "line": 112,
+      "snippet": "$obj  = unserialize( $data );",
+      "message": "Untrusted data is passed to unserialize()."
+    },
+    {
+      "id": "xss-unescaped-output",
+      "title": "Reflected XSS (unescaped output)",
+      "category": "xss",
+      "severity": "medium",
+      "cwe": "CWE-79",
+      "file": "vuln-core.php",
+      "line": 79,
+      "snippet": "echo 'VULNLAB-UPLOADED:' . $name;",
+      "message": "Request data is printed to the page without escaping."
+    },
+    {
+      "id": "xss-unescaped-output",
+      "title": "Reflected XSS (unescaped output)",
+      "category": "xss",
+      "severity": "medium",
+      "cwe": "CWE-79",
+      "file": "vuln-core.php",
+      "line": 92,
+      "snippet": "echo '<span class=\"vulnlab-msg\">' . $msg . '</span>';",
+      "message": "Request data is printed to the page without escaping."
+    },
+    {
+      "id": "redirect-open",
+      "title": "Open redirect",
+      "category": "open_redirect",
+      "severity": "medium",
+      "cwe": "CWE-601",
+      "file": "vuln-core.php",
+      "line": 102,
+      "snippet": "header( 'Location: ' . $url );",
+      "message": "The redirect target is taken from request data."
+    },
+    {
+      "id": "weak-password-hash",
+      "title": "Weak password hashing (MD5/SHA1)",
+      "category": "weak_hash",
+      "severity": "medium",
+      "cwe": "CWE-916",
+      "file": "vuln-core.php",
+      "line": 121,
+      "snippet": "return md5( $password );",
+      "message": "Use wp_hash_password() (bcrypt) instead of md5/sha1."
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "by_severity": {
+      "critical": 3,
+      "high": 9,
+      "medium": 4,
+      "low": 0,
+      "info": 0
+    }
+  }
+}

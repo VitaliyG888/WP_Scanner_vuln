@@ -1,0 +1,23 @@
+# Virtual environment (the venv lives in the project root, so ignore its
+# directories only - never the sources).
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+
+# Scanner output artefacts
+reports/
+*_report.json
+*_report.html
+wp_scan_report.json
+wp_scan_report.html
+vulnerable_functions_report.json
+
+# Editor / OS noise
+.vscode/
+.idea/
+Thumbs.db

@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+venv
+Lib
+Scripts
+Include
+pyvenv.cfg
+__pycache__
+*.pyc
+*.pyo
+legacy
+downloaded_plugins
+*_report.json
+*_report.html
+vulnerable_functions_report.json

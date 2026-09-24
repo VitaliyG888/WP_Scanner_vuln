@@ -1,0 +1,92 @@
+name: wp-vuln-lab
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: env/Dockerfile.wordpress
+    image: wp-vuln-lab-wordpress:latest
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: "0"
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_DEBUG_LOG', false);
+        define('FS_METHOD', 'direct');
+    volumes:
+      - wp_data:/var/www/html
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'exit(@file_get_contents(\"http://127.0.0.1/wp-login.php\")?0:1);'"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+
+  # One shot container that completes the WordPress installation (site title,
+  # admin user, permalinks) so that admin-ajax.php is usable without the web
+  # wizard. It re-uses the image built by the wordpress service, so no extra
+  # image has to be downloaded.
+  installer:
+    image: wp-vuln-lab-wordpress:latest
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WP_LAB_URL: http://localhost:8080
+    volumes:
+      - wp_data:/var/www/html
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+          if php /usr/local/bin/install-wp.php; then
+            exit 0
+          fi
+          echo "database not ready yet (attempt $$attempt)"
+          sleep 5
+        done
+        exit 1
+    restart: "no"
+
+  # Runs the automated scanner test suite against the lab.
+  scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile.scanner
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    environment:
+      TARGET_URL: http://wordpress
+    volumes:
+      # Mount the project so code changes take effect without an image rebuild
+      # and so tests/results.json is written back to the host.
+      - ./:/scanner
+    command: ["python", "tests/run_tests.py", "--url", "http://wordpress", "--wait"]
+
+volumes:
+  wp_data:

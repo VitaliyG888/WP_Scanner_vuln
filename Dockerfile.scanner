@@ -1,0 +1,14 @@
+# Scanner runtime (static analyser + dynamic framework + test suite).
+FROM python:3.11-slim
+
+LABEL org.opencontainers.image.title="WP Vuln Scanner"
+
+WORKDIR /scanner
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+ENV PYTHONUNBUFFERED=1
+CMD ["python", "wp_scanner.py", "--help"]

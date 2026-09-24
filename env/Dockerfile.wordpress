@@ -1,0 +1,21 @@
+FROM wordpress:php8.2-apache
+
+# Ship the intentionally vulnerable plugin as a must-use plugin so that it is
+# always active and needs no activation step.
+#
+# It is placed in /usr/src/wordpress so that the official entrypoint copies it
+# into /var/www/html on the very first start of a fresh volume, and directly
+# into /var/www/html for the case where the volume is not mounted at all.
+COPY env/vulnerable-plugin/vuln-core.php /usr/src/wordpress/wp-content/mu-plugins/vuln-core.php
+COPY env/vulnerable-plugin/vuln-core.php /var/www/html/wp-content/mu-plugins/vuln-core.php
+
+# Non-interactive installer, kept outside /var/www/html so that it survives
+# volume re-use (used by the "installer" compose service).
+COPY env/install-wp.php /usr/local/bin/install-wp.php
+
+# The lab uploads PHP shells into wp-content/uploads/vulnlab, so the directory
+# must be writable by the web server user.
+RUN mkdir -p /var/www/html/wp-content/uploads/vulnlab \
+    && chown -R www-data:www-data /var/www/html/wp-content/uploads
+
+EXPOSE 80

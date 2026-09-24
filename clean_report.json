@@ -1,0 +1,15 @@
+{
+  "target": "C:/MyProject/WP_Vuln_scaner/env/clean-sample",
+  "files_scanned": 1,
+  "findings": [],
+  "summary": {
+    "total": 0,
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    }
+  }
+}
